@@ -55,32 +55,4 @@ public class Utils {
 		return c.getTime();
 	}
 
-	public static String getPassword() {
-
-		String x = "";
-		try {
-			x = Iterators.get((Files.readLines(new File(
-					"C:\\Users\\Anthony\\Desktop\\cred.txt"), Charsets.UTF_8)
-					.iterator()), 1);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		return x;
-	}
-
-	public static String getUserName() {
-		String x = "";
-		try {
-			x = Iterators.get((Files.readLines(new File(
-					"C:\\Users\\Anthony\\Desktop\\cred.txt"), Charsets.UTF_8)
-					.iterator()), 0);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		return x;
-	}
 }
