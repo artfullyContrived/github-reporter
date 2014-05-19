@@ -12,7 +12,6 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import com.demandcube.githubflow.utils.UserFunctions;
-import com.demandcube.githubflow.utils.Utils;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
@@ -29,8 +28,7 @@ public class Test implements GitFlow {
 	// and closed during the past week and by whom.
 	public static void main(String[] args) throws IOException {
 		BasicConfigurator.configure();
-		repo = GitHub.connectUsingPassword(Utils.getUserName(),
-				Utils.getPassword()).getRepository(repository);
+		repo = GitHub.connectAnonymously().getRepository(repository);
 		Collection<String> transform = Collections2.filter(Collections2
 				.transform(repo.getCollaborators(), UserFunctions.EmailFunction),
 				Predicates.notNull());
