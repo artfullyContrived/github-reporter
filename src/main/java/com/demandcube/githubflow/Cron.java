@@ -73,7 +73,7 @@ public class Cron {
 		stopwatch.start();
 		repos = GitHub
 				.connectUsingPassword(props.getProperty("name"),
-						props.getProperty("pasword"))
+						props.getProperty("gitHubPassword"))
 				.getOrganization(repositoryName).getRepositories();
 		logger.debug("Got repos in " + stopwatch.stop());
 		logger.debug(repos.values());
@@ -158,7 +158,7 @@ public class Cron {
 
 		Emailer emailer = new Emailer().sendTo(props.getProperty("to"))
 				.setAttachment(fileName).sendFrom(props.getProperty("sender"))
-				.setPassword(props.getProperty("password"))
+				.setPassword(props.getProperty("emailPassword"))
 				.setSubject(props.getProperty("subject"))
 				.setHostName(props.getProperty("host"))
 				.setBody(props.getProperty("body") + " " + startDate);
