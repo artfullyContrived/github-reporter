@@ -10,11 +10,16 @@ import java.util.Set;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.apache.log4j.Logger;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 public final class Emailer {
 
@@ -110,12 +115,20 @@ public final class Emailer {
 		email.setTLS(true);
 		email.setSmtpPort(465);
 
-		for (String recipient : recipients) {
-			email.addTo(recipient);
-		}
+		email.setTo(Collections2.transform(recipients,
+				new Function<String, InternetAddress>() {
+					@Override
+					public InternetAddress apply(String address) {
+						try {
+							return new InternetAddress(address);
+						} catch (AddressException e) {
+							e.printStackTrace();
+						}
+						return null;
+					}
+				}));
 
 		email.setFrom(from);
-		email.setFrom(from, "neverwinterdp@googlegroups.com");
 		email.setSubject(subject);
 		email.setMsg(body);
 
@@ -127,7 +140,7 @@ public final class Emailer {
 		email.setSSL(true);
 		email.setTLS(true);
 		email.send();
-		logger.debug("after send ");
+		logger.debug("after sending to --> " + recipients);
 	}
 
 	public Emailer setPassword(String password) {

@@ -59,7 +59,7 @@ public class Cron {
 				.getPropertyFile("log4j.properties"));
 		props = PropertyUtils.getPropertyFile("viper.properties");
 		Stopwatch stopwatch = createUnstarted();
-		
+
 		Date startDate = getStartOfPreviousWeek(1);
 		logger.debug("Start date: " + startDate);
 		Date endDate = Utils.getEndOfPreviousWeek(1);
@@ -154,8 +154,9 @@ public class Cron {
 		Collections.sort(emailAddresses);
 		logger.debug("emails " + emailAddresses);
 
-		Emailer emailer = new Emailer().sendTo(props.getProperty("to"))
-				.setAttachment(file).sendFrom(System.getProperty("gmailUsername"))
+		Emailer emailer = new Emailer().sendTo(emailAddresses)
+				.setAttachment(file)
+				.sendFrom(System.getProperty("gmailUsername"))
 				.setPassword(System.getProperty("gmailPassword"))
 				.setSubject(props.getProperty("subject"))
 				.setHostName(props.getProperty("host"))
