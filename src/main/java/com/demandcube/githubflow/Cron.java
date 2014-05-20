@@ -38,6 +38,7 @@ import com.demandcube.githubflow.utils.Utils;
 import com.demandcube.githubflow.utils.predicates.CreatedBetweenPredicate;
 import com.google.common.base.Predicate;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -154,13 +155,18 @@ public class Cron {
 		Collections.sort(emailAddresses);
 		logger.debug("emails " + emailAddresses);
 
-		Emailer emailer = new Emailer().sendTo(emailAddresses)
+		Emailer emailer = new Emailer()
 				.setAttachment(file)
 				.sendFrom(System.getProperty("gmailUsername"))
 				.setPassword(System.getProperty("gmailPassword"))
 				.setSubject(props.getProperty("subject"))
 				.setHostName(props.getProperty("host"))
 				.setBody(props.getProperty("body") + " " + startDate);
+		if(Strings.isNullOrEmpty(props.getProperty("to"))) {
+			emailer.sendTo(emailAddresses);
+		}else{
+		emailer.sendTo(props.getProperty("to"));
+		}
 		emailer.sendMail();
 	}
 
