@@ -7,6 +7,7 @@ import static com.demandcube.githubflow.utils.Utils.getStartOfPreviousWeek;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.base.Stopwatch.createUnstarted;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -36,7 +37,6 @@ import com.demandcube.githubflow.utils.UserFunctions;
 import com.demandcube.githubflow.utils.Utils;
 import com.demandcube.githubflow.utils.predicates.CreatedBetweenPredicate;
 import com.google.common.base.Predicate;
-import com.google.common.base.StandardSystemProperty;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
@@ -48,28 +48,27 @@ import com.google.common.collect.Sets;
 public class Cron {
 	private static final String repositoryName = "DemandCube";
 	private static final DateFormat dateFormat = new SimpleDateFormat(
-			"dd MM yyyy");
+			"dd_MM_yyyy");
 	private static Map<String, GHRepository> repos;
 
 	private static final Logger logger = Logger.getLogger(Cron.class);
 	static Properties props;
 
 	public static void main(String[] args) throws IOException, EmailException {
-		PropertyConfigurator.configure(PropertyUtils.getPropertyFile("log4j.properties"));
+		PropertyConfigurator.configure(PropertyUtils
+				.getPropertyFile("log4j.properties"));
 		props = PropertyUtils.getPropertyFile("viper.properties");
 		Stopwatch stopwatch = createUnstarted();
+		logger.debug("username -->" + System.getProperty("artfullyContrived"));
 
 		Date startDate = getStartOfPreviousWeek(1);
 		logger.debug("Start date: " + startDate);
 		Date endDate = Utils.getEndOfPreviousWeek(1);
 		logger.debug("End date: " + endDate);
 		// TODO create temp file
-		String fileName = (StandardSystemProperty.JAVA_IO_TMPDIR.value()
-				+ StandardSystemProperty.FILE_SEPARATOR.value()
-				+ dateFormat.format(startDate) + ".xlsx").replaceAll("\\s+",
-				"_");
-
-		logger.debug("filename " + fileName);
+		File file = new File(dateFormat.format(startDate) + ".xlsx");
+		file.deleteOnExit();
+		logger.debug("filename " + file);
 		stopwatch.start();
 		repos = GitHub
 				.connectUsingPassword(props.getProperty("name"),
@@ -130,11 +129,11 @@ public class Cron {
 				startDate, endDate, userNames);
 
 		XSSFWorkbook workbook = creator.createWorkBook();
-		FileOutputStream fileOut = new FileOutputStream(fileName);
+		FileOutputStream fileOut = new FileOutputStream(file);
 		workbook.write(fileOut);
 		fileOut.close();
 
-		sendMail(fileName, collaborators, startDate);
+		sendMail(file, collaborators, startDate);
 
 	}
 
@@ -144,7 +143,7 @@ public class Cron {
 	 * @param startDate
 	 * @throws EmailException
 	 */
-	private static void sendMail(String fileName, Set<GHUser> collaborators,
+	private static void sendMail(File file, Set<GHUser> collaborators,
 			Date startDate) throws EmailException {
 		// get email addresses of collaborators
 		Collection<String> all = Collections2.transform(collaborators,
@@ -157,7 +156,7 @@ public class Cron {
 		logger.debug("emails " + emailAddresses);
 
 		Emailer emailer = new Emailer().sendTo(props.getProperty("to"))
-				.setAttachment(fileName).sendFrom(props.getProperty("sender"))
+				.setAttachment(file).sendFrom(props.getProperty("sender"))
 				.setPassword(props.getProperty("emailPassword"))
 				.setSubject(props.getProperty("subject"))
 				.setHostName(props.getProperty("host"))
