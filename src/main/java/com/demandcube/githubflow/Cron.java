@@ -155,17 +155,16 @@ public class Cron {
 		Collections.sort(emailAddresses);
 		logger.debug("emails " + emailAddresses);
 
-		Emailer emailer = new Emailer()
-				.setAttachment(file)
+		Emailer emailer = new Emailer().setAttachment(file)
 				.sendFrom(System.getProperty("gmailUsername"))
 				.setPassword(System.getProperty("gmailPassword"))
 				.setSubject(props.getProperty("subject"))
 				.setHostName(props.getProperty("host"))
 				.setBody(props.getProperty("body") + " " + startDate);
-		if(Strings.isNullOrEmpty(props.getProperty("to"))) {
+		if (Strings.isNullOrEmpty(props.getProperty("to"))) {
 			emailer.sendTo(emailAddresses);
-		}else{
-		emailer.sendTo(props.getProperty("to"));
+		} else {
+			emailer.sendTo(props.getProperty("to"));
 		}
 		emailer.sendMail();
 	}
