@@ -29,5 +29,5 @@ run {
 
 compileJava {
     options.fork = true  // Fork your compilation into a child process
-    options.forkOptions.setMemoryMaximumSize("2g") // Set maximum memory to 4g
+    options.forkOptions.setMemoryMaximumSize("1g") // Set maximum memory to 4g
 }
