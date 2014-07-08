@@ -539,17 +539,16 @@ public class WorkbookCreator {
 			logger.debug("Issue " + issue.getTitle());
 			logger.debug("Issue number " + issue.getNumber());
 			logger.debug("Issue repo " + issue.getRepository().getName());
-
 			try {
-				logger.debug("Issue  user " + issue.getUser().getName());
-				return issue.getUser().getName();
-			} catch (NullPointerException e) {
-				logger.debug("We have an error here " + e.getMessage() + " "
-						+ issue);
+				if (issue.getUser().getName() != null)
+					return issue.getUser().getName();
+				else {
+					return "unkown";
+				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
+
 			return "";
 		}
 	}
