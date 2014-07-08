@@ -132,7 +132,7 @@ public class Cron {
 		FileOutputStream fileOut = new FileOutputStream(file);
 		workbook.write(fileOut);
 		fileOut.close();
-
+		logger.debug("workbook written to file.");
 		sendMail(file, collaborators, startDate);
 
 	}
@@ -196,7 +196,8 @@ public class Cron {
 		if (state.equals(GHIssueState.OPEN))
 			predicate = new CreatedBetweenPredicate<GHPullRequest>(startDate,
 					endDate);
-		else //TODO whats happening here?
+		else
+			// TODO whats happening here?
 			predicate = new CreatedBetweenPredicate<GHPullRequest>(startDate,
 					endDate);
 		try {
