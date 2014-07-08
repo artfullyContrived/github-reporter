@@ -535,6 +535,7 @@ public class WorkbookCreator {
 
 	private static final class NameFunction implements Function<GHIssue, String> {
 		public String apply(GHIssue issue) {
+			logger.debug("Issue "+ issue.getTitle());
 			try {
 				return issue.getUser().getName();
 			} catch (Exception e) {
