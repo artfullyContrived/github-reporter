@@ -134,7 +134,6 @@ public class Cron {
 		fileOut.close();
 		logger.debug("workbook written to file.");
 		sendMail(file, collaborators, startDate);
-
 	}
 
 	/**
