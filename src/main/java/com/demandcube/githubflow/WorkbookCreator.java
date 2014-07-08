@@ -540,8 +540,11 @@ public class WorkbookCreator {
 			logger.debug("Issue repo "+ issue.getRepository().getName());
 			try {
 				return issue.getUser().getName();
-			} catch (Exception e) {
-				logger.debug("We have an error here "+ e.getMessage() +" "+ issue.getUser());
+			} catch (NullPointerException e) {
+				logger.debug("We have an error here "+ e.getMessage() +" "+ issue);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			return "";
 		}
