@@ -116,6 +116,8 @@ public class WorkbookCreator {
 		row.createCell(0).setCellValue("Pull requests Closed:");
 		row.createCell(1).setCellValue(closedPullRequests.size());
 
+		logger.debug("just before the exception? --------------->");
+		logger.debug("Opened issues size"+ openedIssues.size());
 		ListMultimap<String, GHIssue> openedIssuesByName = Multimaps.index(
 				openedIssues, new NameFunction());
 		ListMultimap<String, GHIssue> closedIssuesByName = Multimaps.index(
