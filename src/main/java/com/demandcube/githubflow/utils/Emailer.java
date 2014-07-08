@@ -115,7 +115,6 @@ public final class Emailer {
 		// email.setTLS(true);
 		// email.setSSL(true);
 		// email.setSmtpPort(465);
-
 		email.setSmtpPort(587);
 		email.setTLS(true);
 
