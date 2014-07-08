@@ -535,7 +535,8 @@ public class WorkbookCreator {
 		public String apply(GHIssue issue) {
 			try {
 				return issue.getUser().getName();
-			} catch (IOException e) {
+			} catch (Exception e) {
+				logger.debug("We have an error here "+ e.getMessage() +" "+ issue.getUser());
 			}
 			return "";
 		}
