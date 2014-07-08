@@ -127,8 +127,9 @@ public class Cron {
 		WorkbookCreator creator = new WorkbookCreator(openedIssues,
 				closedIssues, openedPullRequests, closedPullRequests,
 				startDate, endDate, userNames);
-
+		logger.debug("Do we get here ");
 		XSSFWorkbook workbook = creator.createWorkBook();
+		logger.debug("Or even here?");
 		FileOutputStream fileOut = new FileOutputStream(file);
 		workbook.write(fileOut);
 		fileOut.close();
@@ -161,8 +162,10 @@ public class Cron {
 				.setHostName(props.getProperty("host"))
 				.setBody(props.getProperty("body") + " " + startDate);
 		if (Strings.isNullOrEmpty(props.getProperty("to"))) {
+		logger.info("Sending mail to "+ emailAddresses);
 			emailer.sendTo(emailAddresses);
 		} else {
+			logger.info("Sending mail to " + props.getProperty("to"));
 			emailer.sendTo(props.getProperty("to"));
 		}
 		emailer.sendMail();
