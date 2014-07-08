@@ -196,7 +196,7 @@ public class Cron {
 		if (state.equals(GHIssueState.OPEN))
 			predicate = new CreatedBetweenPredicate<GHPullRequest>(startDate,
 					endDate);
-		else
+		else //TODO whats happening here?
 			predicate = new CreatedBetweenPredicate<GHPullRequest>(startDate,
 					endDate);
 		try {

@@ -117,7 +117,7 @@ public class WorkbookCreator {
 		row.createCell(1).setCellValue(closedPullRequests.size());
 
 		logger.debug("just before the exception? --------------->");
-		logger.debug("Opened issues size"+ openedIssues.size());
+		logger.debug("Opened issues size" + openedIssues.size());
 		ListMultimap<String, GHIssue> openedIssuesByName = Multimaps.index(
 				openedIssues, new NameFunction());
 		ListMultimap<String, GHIssue> closedIssuesByName = Multimaps.index(
@@ -176,7 +176,7 @@ public class WorkbookCreator {
 
 		}
 
-		row = sheet.createRow(i+=2);
+		row = sheet.createRow(i += 2);
 		row.createCell(0).setCellValue("Repo Summary");
 		row.getCell(0).setCellStyle(boldStyle);
 
@@ -533,15 +533,19 @@ public class WorkbookCreator {
 		return sheet;
 	}
 
-	private static final class NameFunction implements Function<GHIssue, String> {
+	private static final class NameFunction implements
+			Function<GHIssue, String> {
 		public String apply(GHIssue issue) {
-			logger.debug("Issue "+ issue.getTitle());
-			logger.debug("Issue number "+ issue.getNumber());
-			logger.debug("Issue repo "+ issue.getRepository().getName());
+			logger.debug("Issue " + issue.getTitle());
+			logger.debug("Issue number " + issue.getNumber());
+			logger.debug("Issue repo " + issue.getRepository().getName());
+
 			try {
+				logger.debug("Issue  user " + issue.getUser().getName());
 				return issue.getUser().getName();
 			} catch (NullPointerException e) {
-				logger.debug("We have an error here "+ e.getMessage() +" "+ issue);
+				logger.debug("We have an error here " + e.getMessage() + " "
+						+ issue);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
