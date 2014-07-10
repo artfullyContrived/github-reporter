@@ -24,7 +24,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 
-//TODO remove tautology please
+//TODO remove tautology
 public class WorkbookCreator {
 
 	private static final Logger logger = Logger
