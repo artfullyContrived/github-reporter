@@ -22,14 +22,14 @@ In its simplest format the report will scan through github repositories of the t
 
 Requirements    
 ===
-[jdk 1.7]
-
-[gradle]
+1. [jdk 1.7]
+2. [gradle]
 
 
 Installation instructions
 ===
-```1. git clone https://github.com/DemandCube/github-reporter.git    
+```
+1. git clone https://github.com/DemandCube/github-reporter.git    
 2. cd github-reporter    
 3. vi viper.properties    
 ...edit the sender's email address.    
