@@ -22,9 +22,9 @@ In its simplest format the report will scan through github repositories of the t
 
 Requirements    
 ===
-[jdk 1.7]    
-[gradle]
+[jdk 1.7]
 
+[gradle]
 
 
 Installation instructions
