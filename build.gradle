@@ -26,3 +26,8 @@ run {
     /* Can pass all the properties: */
     systemProperties = System.getProperties()
 }
+
+compileJava {
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("512m") // Set maximum memory to 4g
+}

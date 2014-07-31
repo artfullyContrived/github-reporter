@@ -112,8 +112,11 @@ public final class Emailer {
 		MultiPartEmail email = new MultiPartEmail();
 		email.setHostName(hostName);
 		email.setAuthenticator(new GMailAuthenticator(from, password));
+		// email.setTLS(true);
+		// email.setSSL(true);
+		// email.setSmtpPort(465);
+		email.setSmtpPort(587);
 		email.setTLS(true);
-		email.setSmtpPort(465);
 
 		email.setTo(Collections2.transform(recipients,
 				new Function<String, InternetAddress>() {
