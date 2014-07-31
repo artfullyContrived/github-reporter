@@ -35,6 +35,7 @@ import com.demandcube.githubflow.utils.Emailer;
 import com.demandcube.githubflow.utils.PropertyUtils;
 import com.demandcube.githubflow.utils.UserFunctions;
 import com.demandcube.githubflow.utils.Utils;
+import com.demandcube.githubflow.utils.predicates.ClosedBetweenPredicate;
 import com.demandcube.githubflow.utils.predicates.CreatedBetweenPredicate;
 import com.google.common.base.Predicate;
 import com.google.common.base.Stopwatch;
@@ -179,7 +180,7 @@ public class Cron {
 		if (state.equals(GHIssueState.OPEN))
 			predicate = new CreatedBetweenPredicate<GHIssue>(startDate, endDate);
 		else
-			predicate = new CreatedBetweenPredicate<GHIssue>(startDate, endDate);
+			predicate = new ClosedBetweenPredicate<GHIssue>(startDate, endDate);
 		try {
 			List<GHIssue> allIssues = repo.getIssues(state);
 			issues = Lists.newArrayList(Iterables.filter(allIssues, predicate));
@@ -200,10 +201,9 @@ public class Cron {
 					endDate);
 		else
 			// TODO whats happening here?
-			predicate = new CreatedBetweenPredicate<GHPullRequest>(startDate,
+			predicate = new ClosedBetweenPredicate<GHPullRequest>(startDate,
 					endDate);
 		try {
-
 			List<GHPullRequest> allIssues = repo.getPullRequests(state);
 			issues = Lists.newArrayList(Iterables.filter(allIssues, predicate));
 		} catch (IOException e) {

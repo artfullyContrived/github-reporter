@@ -121,12 +121,12 @@ public class WorkbookCreator {
 		ListMultimap<String, GHIssue> openedIssuesByName = Multimaps.index(
 				openedIssues, new NameFunction());
 		ListMultimap<String, GHIssue> closedIssuesByName = Multimaps.index(
-				closedIssues, new NameFunction());
+				closedIssues, new ClosedByNameFunction());
 
 		ListMultimap<String, GHPullRequest> openedPullRequestsByName = Multimaps
 				.index(openedPullRequests, new NameFunction());
 		ListMultimap<String, GHPullRequest> closedRequestsByName = Multimaps
-				.index(closedPullRequests, new NameFunction());
+				.index(closedPullRequests, new ClosedByNameFunction());
 
 		ListMultimap<String, GHIssue> openedIssuesByRepo = Multimaps.index(
 				openedIssues, new RepoFunction<GHIssue>());
@@ -471,16 +471,16 @@ public class WorkbookCreator {
 				createHelper.createRichTextString("Issue No."));
 		row.createCell(1).setCellValue(
 				createHelper.createRichTextString("Repository"));
-		row.createCell(1).setCellValue(
-				createHelper.createRichTextString("Description"));
 		row.createCell(2).setCellValue(
-				createHelper.createRichTextString("Date Created"));
+				createHelper.createRichTextString("Description"));
 		row.createCell(3).setCellValue(
-				createHelper.createRichTextString("Date Closed"));
+				createHelper.createRichTextString("Date Created"));
 		row.createCell(4).setCellValue(
-				createHelper.createRichTextString("User"));
+				createHelper.createRichTextString("Date Closed"));
 		row.createCell(5).setCellValue(
 				createHelper.createRichTextString("Assignee"));
+		row.createCell(6).setCellValue(
+				createHelper.createRichTextString("Closed by"));
 		for (Cell cell : row) {
 			cell.setCellStyle(boldStyle);
 		}
@@ -497,14 +497,16 @@ public class WorkbookCreator {
 			row.getCell(3).setCellStyle(dateStyle);
 			row.createCell(4).setCellValue(issue.getClosedAt());
 			row.getCell(4).setCellStyle(dateStyle);
-			row.createCell(5).setCellValue(
-					createHelper
-							.createRichTextString(issue.getUser().getName()));
 			if (issue.getAssignee() != null) {
-				row.createCell(6).setCellValue(
+				row.createCell(5).setCellValue(
 						createHelper.createRichTextString(issue.getAssignee()
 								.getName()));
 			}
+			row.createCell(6).setCellValue(
+					createHelper.createRichTextString(issue.getRepository()
+							.getIssue(issue.getNumber()).getClosedBy()
+							.getName().toString()));
+
 		}
 
 		row = sheet.createRow(closedIssues.size() + 3);
@@ -529,28 +531,43 @@ public class WorkbookCreator {
 		sheet.autoSizeColumn(3);
 		sheet.autoSizeColumn(4);
 		sheet.autoSizeColumn(5);
+		sheet.autoSizeColumn(6);
+		sheet.autoSizeColumn(7);
 
 		return sheet;
+	}
+
+	private static final class ClosedByNameFunction implements
+			Function<GHIssue, String> {
+		public String apply(GHIssue issue) {
+			try {
+
+				if (issue.getRepository().getIssue(issue.getNumber())
+						.getClosedBy() != null)
+					return issue.getRepository().getIssue(issue.getNumber())
+							.getClosedBy().getName();
+				else {
+					logger.debug("Issue is closed but has no closer. "
+							+ issue.getTitle() + "status " + issue.getState()
+							+ " closer ");
+					return issue.getUser().getName();
+				}
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
+			logger.debug("Issue is closed but has no closer "
+					+ issue.getTitle());
+			return "";
+		}
 	}
 
 	private static final class NameFunction implements
 			Function<GHIssue, String> {
 		public String apply(GHIssue issue) {
-			/*
-			 * logger.debug("Issue " + issue.getTitle());
-			 * logger.debug("Issue number " + issue.getNumber());
-			 * logger.debug("Issue repo " + issue.getRepository().getName());
-			 */
 			try {
-				if (issue.getUser().getName() != null)
-					return issue.getUser().getName();
-				else {
-					return "unkown";
-				}
+				return issue.getUser().getName();
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
 			}
-
 			return "";
 		}
 	}
